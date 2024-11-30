@@ -24,11 +24,12 @@
         <div id="container"></div>
         <button id="update">Update weather</button>
     </main>
-    
+
     <footer>
         <p>Source:2024 Weather App</p>
     </footer>
     <script>
+        
         async function fetchWeather(city){
             const a='b9ea5a68077644e9b47140729242911'; 
             const url=`https://api.weatherapi.com/v1/current.json?key=${a}&q=${city}`;
