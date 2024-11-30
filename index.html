@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>погода 9 лаб</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header>
+        <h1>Weather forecast</h1>
+    </header>
+    <main>
+        <div class="background-video">
+            <video autoplay muted loop id="bg-video">
+                <source src="videoplayback.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="div-select">
+            <select id="select"></select> 
+        </div>
+        <div id="container"></div>
+        <button id="update">Update weather</button>
+    </main>
+    <footer>
+        <p>Source:2024 Weather App</p>
+    </footer>
+    <script>
+        async function fetchWeather(city){
+            const a='b9ea5a68077644e9b47140729242911'; 
+            const url=`https://api.weatherapi.com/v1/current.json?key=${a}&q=${city}`;
+            try{
+                const response=await fetch(url);
+                const data=await response.json();
+                return data;
+            } 
+            catch (error){
+                console.error('Не удалось получить информацию о погоде:', error);
+            }
+        }
+        async function fetchCities(){
+            const response=await fetch('./data.json'); 
+            const cities=await response.json();
+            return cities;  
+        }
+        const select=document.getElementById('select');
+        async function Сomplete(){
+            try{
+                const cities=await fetchCities();
+                cities.forEach(city => {
+                    const option=document.createElement('option');
+                    option.value=city.name;
+                    option.textContent=`${city.name}, ${city.country}`;
+                    select.appendChild(option);
+                });
+            } 
+            catch (error){
+                console.error(error);
+                alert('Ошибка с городами');
+            }
+        } 
+        async function UpdateF() {
+            const container=document.getElementById('container');
+            const sCity=select.value;
+            container.innerHTML='';
+            try{
+                const weather=await fetchWeather(sCity);
+                const div= document.createElement('div');
+                div.className='weather-div';
+                div.innerHTML=`
+                    <div class="icon-city">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1916/1916270.png"> 
+                        <h3>${sCity}</h3>
+                        </div>
+                    <p>Temperature:${weather.current.temp_c}°C</p>
+                    <p>Humidity:${weather.current.humidity}%</p>
+                `;
+                container.appendChild(div);
+            } catch (error){
+                console.error(error);
+                alert('Ошибка при обновлении');
+            }
+        }
+    
+        document.getElementById('update').addEventListener('click', UpdateF);
+    
+        
+        window.addEventListener('load',async()=>{
+            await Сomplete();
+        });
+    </script>
+</body>
+</html>
