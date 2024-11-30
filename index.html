@@ -42,6 +42,7 @@
                 console.error('Не удалось получить информацию о погоде:', error);
             }
         }
+        
         async function fetchCities(){
             const response=await fetch('./data.json'); 
             const cities=await response.json();
